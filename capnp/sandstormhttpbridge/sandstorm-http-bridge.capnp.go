@@ -81,22 +81,6 @@ func (c SandstormHttpBridge) SaveIdentity(ctx context.Context, params func(Sands
 	ans, release := c.Client.SendCall(ctx, s)
 	return SandstormHttpBridge_saveIdentity_Results_Future{Future: ans.Future()}, release
 }
-func (c SandstormHttpBridge) SetPersistHook(ctx context.Context, params func(SandstormHttpBridge_setPersistHook_Params) error) (SandstormHttpBridge_setPersistHook_Results_Future, capnp.ReleaseFunc) {
-	s := capnp.Send{
-		Method: capnp.Method{
-			InterfaceID:   0xad678f0d09bdd98a,
-			MethodID:      4,
-			InterfaceName: "sandstorm-http-bridge.capnp:SandstormHttpBridge",
-			MethodName:    "setPersistHook",
-		},
-	}
-	if params != nil {
-		s.ArgsSize = capnp.ObjectSize{DataSize: 0, PointerCount: 1}
-		s.PlaceArgs = func(s capnp.Struct) error { return params(SandstormHttpBridge_setPersistHook_Params{Struct: s}) }
-	}
-	ans, release := c.Client.SendCall(ctx, s)
-	return SandstormHttpBridge_setPersistHook_Results_Future{Future: ans.Future()}, release
-}
 
 // A SandstormHttpBridge_Server is a SandstormHttpBridge with a local implementation.
 type SandstormHttpBridge_Server interface {
@@ -107,8 +91,6 @@ type SandstormHttpBridge_Server interface {
 	GetSavedIdentity(context.Context, SandstormHttpBridge_getSavedIdentity) error
 
 	SaveIdentity(context.Context, SandstormHttpBridge_saveIdentity) error
-
-	SetPersistHook(context.Context, SandstormHttpBridge_setPersistHook) error
 }
 
 // SandstormHttpBridge_NewServer creates a new Server from an implementation of SandstormHttpBridge_Server.
@@ -127,7 +109,7 @@ func SandstormHttpBridge_ServerToClient(s SandstormHttpBridge_Server, policy *se
 // This can be used to create a more complicated Server.
 func SandstormHttpBridge_Methods(methods []server.Method, s SandstormHttpBridge_Server) []server.Method {
 	if cap(methods) == 0 {
-		methods = make([]server.Method, 0, 5)
+		methods = make([]server.Method, 0, 4)
 	}
 
 	methods = append(methods, server.Method{
@@ -175,18 +157,6 @@ func SandstormHttpBridge_Methods(methods []server.Method, s SandstormHttpBridge_
 		},
 		Impl: func(ctx context.Context, call *server.Call) error {
 			return s.SaveIdentity(ctx, SandstormHttpBridge_saveIdentity{call})
-		},
-	})
-
-	methods = append(methods, server.Method{
-		Method: capnp.Method{
-			InterfaceID:   0xad678f0d09bdd98a,
-			MethodID:      4,
-			InterfaceName: "sandstorm-http-bridge.capnp:SandstormHttpBridge",
-			MethodName:    "setPersistHook",
-		},
-		Impl: func(ctx context.Context, call *server.Call) error {
-			return s.SetPersistHook(ctx, SandstormHttpBridge_setPersistHook{call})
 		},
 	})
 
@@ -259,23 +229,6 @@ func (c SandstormHttpBridge_saveIdentity) Args() SandstormHttpBridge_saveIdentit
 func (c SandstormHttpBridge_saveIdentity) AllocResults() (SandstormHttpBridge_saveIdentity_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 0})
 	return SandstormHttpBridge_saveIdentity_Results{Struct: r}, err
-}
-
-// SandstormHttpBridge_setPersistHook holds the state for a server call to SandstormHttpBridge.setPersistHook.
-// See server.Call for documentation.
-type SandstormHttpBridge_setPersistHook struct {
-	*server.Call
-}
-
-// Args returns the call's arguments.
-func (c SandstormHttpBridge_setPersistHook) Args() SandstormHttpBridge_setPersistHook_Params {
-	return SandstormHttpBridge_setPersistHook_Params{Struct: c.Call.Args()}
-}
-
-// AllocResults allocates the results struct.
-func (c SandstormHttpBridge_setPersistHook) AllocResults() (SandstormHttpBridge_setPersistHook_Results, error) {
-	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return SandstormHttpBridge_setPersistHook_Results{Struct: r}, err
 }
 
 type SandstormHttpBridge_getSandstormApi_Params struct{ capnp.Struct }
@@ -842,608 +795,56 @@ func (p SandstormHttpBridge_saveIdentity_Results_Future) Struct() (SandstormHttp
 	return SandstormHttpBridge_saveIdentity_Results{s}, err
 }
 
-type SandstormHttpBridge_setPersistHook_Params struct{ capnp.Struct }
-
-// SandstormHttpBridge_setPersistHook_Params_TypeID is the unique identifier for the type SandstormHttpBridge_setPersistHook_Params.
-const SandstormHttpBridge_setPersistHook_Params_TypeID = 0xee4b3bf929955f83
-
-func NewSandstormHttpBridge_setPersistHook_Params(s *capnp.Segment) (SandstormHttpBridge_setPersistHook_Params, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return SandstormHttpBridge_setPersistHook_Params{st}, err
-}
-
-func NewRootSandstormHttpBridge_setPersistHook_Params(s *capnp.Segment) (SandstormHttpBridge_setPersistHook_Params, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return SandstormHttpBridge_setPersistHook_Params{st}, err
-}
-
-func ReadRootSandstormHttpBridge_setPersistHook_Params(msg *capnp.Message) (SandstormHttpBridge_setPersistHook_Params, error) {
-	root, err := msg.Root()
-	return SandstormHttpBridge_setPersistHook_Params{root.Struct()}, err
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params) String() string {
-	str, _ := text.Marshal(0xee4b3bf929955f83, s.Struct)
-	return str
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params) Hook() PersistHook {
-	p, _ := s.Struct.Ptr(0)
-	return PersistHook{Client: p.Interface().Client()}
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params) HasHook() bool {
-	return s.Struct.HasPtr(0)
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params) SetHook(v PersistHook) error {
-	if !v.Client.IsValid() {
-		return s.Struct.SetPtr(0, capnp.Ptr{})
-	}
-	seg := s.Segment()
-	in := capnp.NewInterface(seg, seg.Message().AddCap(v.Client))
-	return s.Struct.SetPtr(0, in.ToPtr())
-}
-
-// SandstormHttpBridge_setPersistHook_Params_List is a list of SandstormHttpBridge_setPersistHook_Params.
-type SandstormHttpBridge_setPersistHook_Params_List struct{ capnp.List }
-
-// NewSandstormHttpBridge_setPersistHook_Params creates a new list of SandstormHttpBridge_setPersistHook_Params.
-func NewSandstormHttpBridge_setPersistHook_Params_List(s *capnp.Segment, sz int32) (SandstormHttpBridge_setPersistHook_Params_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
-	return SandstormHttpBridge_setPersistHook_Params_List{l}, err
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params_List) At(i int) SandstormHttpBridge_setPersistHook_Params {
-	return SandstormHttpBridge_setPersistHook_Params{s.List.Struct(i)}
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params_List) Set(i int, v SandstormHttpBridge_setPersistHook_Params) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s SandstormHttpBridge_setPersistHook_Params_List) String() string {
-	str, _ := text.MarshalList(0xee4b3bf929955f83, s.List)
-	return str
-}
-
-// SandstormHttpBridge_setPersistHook_Params_Future is a wrapper for a SandstormHttpBridge_setPersistHook_Params promised by a client call.
-type SandstormHttpBridge_setPersistHook_Params_Future struct{ *capnp.Future }
-
-func (p SandstormHttpBridge_setPersistHook_Params_Future) Struct() (SandstormHttpBridge_setPersistHook_Params, error) {
-	s, err := p.Future.Struct()
-	return SandstormHttpBridge_setPersistHook_Params{s}, err
-}
-
-func (p SandstormHttpBridge_setPersistHook_Params_Future) Hook() PersistHook {
-	return PersistHook{Client: p.Future.Field(0, nil).Client()}
-}
-
-type SandstormHttpBridge_setPersistHook_Results struct{ capnp.Struct }
-
-// SandstormHttpBridge_setPersistHook_Results_TypeID is the unique identifier for the type SandstormHttpBridge_setPersistHook_Results.
-const SandstormHttpBridge_setPersistHook_Results_TypeID = 0xb2e5439feb5f31ce
-
-func NewSandstormHttpBridge_setPersistHook_Results(s *capnp.Segment) (SandstormHttpBridge_setPersistHook_Results, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return SandstormHttpBridge_setPersistHook_Results{st}, err
-}
-
-func NewRootSandstormHttpBridge_setPersistHook_Results(s *capnp.Segment) (SandstormHttpBridge_setPersistHook_Results, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return SandstormHttpBridge_setPersistHook_Results{st}, err
-}
-
-func ReadRootSandstormHttpBridge_setPersistHook_Results(msg *capnp.Message) (SandstormHttpBridge_setPersistHook_Results, error) {
-	root, err := msg.Root()
-	return SandstormHttpBridge_setPersistHook_Results{root.Struct()}, err
-}
-
-func (s SandstormHttpBridge_setPersistHook_Results) String() string {
-	str, _ := text.Marshal(0xb2e5439feb5f31ce, s.Struct)
-	return str
-}
-
-// SandstormHttpBridge_setPersistHook_Results_List is a list of SandstormHttpBridge_setPersistHook_Results.
-type SandstormHttpBridge_setPersistHook_Results_List struct{ capnp.List }
-
-// NewSandstormHttpBridge_setPersistHook_Results creates a new list of SandstormHttpBridge_setPersistHook_Results.
-func NewSandstormHttpBridge_setPersistHook_Results_List(s *capnp.Segment, sz int32) (SandstormHttpBridge_setPersistHook_Results_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0}, sz)
-	return SandstormHttpBridge_setPersistHook_Results_List{l}, err
-}
-
-func (s SandstormHttpBridge_setPersistHook_Results_List) At(i int) SandstormHttpBridge_setPersistHook_Results {
-	return SandstormHttpBridge_setPersistHook_Results{s.List.Struct(i)}
-}
-
-func (s SandstormHttpBridge_setPersistHook_Results_List) Set(i int, v SandstormHttpBridge_setPersistHook_Results) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s SandstormHttpBridge_setPersistHook_Results_List) String() string {
-	str, _ := text.MarshalList(0xb2e5439feb5f31ce, s.List)
-	return str
-}
-
-// SandstormHttpBridge_setPersistHook_Results_Future is a wrapper for a SandstormHttpBridge_setPersistHook_Results promised by a client call.
-type SandstormHttpBridge_setPersistHook_Results_Future struct{ *capnp.Future }
-
-func (p SandstormHttpBridge_setPersistHook_Results_Future) Struct() (SandstormHttpBridge_setPersistHook_Results, error) {
-	s, err := p.Future.Struct()
-	return SandstormHttpBridge_setPersistHook_Results{s}, err
-}
-
-type PersistHook struct{ Client *capnp.Client }
-
-// PersistHook_TypeID is the unique identifier for the type PersistHook.
-const PersistHook_TypeID = 0x9e629b6a29a1a3ac
-
-func (c PersistHook) Restore(ctx context.Context, params func(PersistHook_restore_Params) error) (PersistHook_restore_Results_Future, capnp.ReleaseFunc) {
-	s := capnp.Send{
-		Method: capnp.Method{
-			InterfaceID:   0x9e629b6a29a1a3ac,
-			MethodID:      0,
-			InterfaceName: "sandstorm-http-bridge.capnp:PersistHook",
-			MethodName:    "restore",
-		},
-	}
-	if params != nil {
-		s.ArgsSize = capnp.ObjectSize{DataSize: 0, PointerCount: 1}
-		s.PlaceArgs = func(s capnp.Struct) error { return params(PersistHook_restore_Params{Struct: s}) }
-	}
-	ans, release := c.Client.SendCall(ctx, s)
-	return PersistHook_restore_Results_Future{Future: ans.Future()}, release
-}
-func (c PersistHook) Drop(ctx context.Context, params func(PersistHook_drop_Params) error) (PersistHook_drop_Results_Future, capnp.ReleaseFunc) {
-	s := capnp.Send{
-		Method: capnp.Method{
-			InterfaceID:   0x9e629b6a29a1a3ac,
-			MethodID:      1,
-			InterfaceName: "sandstorm-http-bridge.capnp:PersistHook",
-			MethodName:    "drop",
-		},
-	}
-	if params != nil {
-		s.ArgsSize = capnp.ObjectSize{DataSize: 0, PointerCount: 1}
-		s.PlaceArgs = func(s capnp.Struct) error { return params(PersistHook_drop_Params{Struct: s}) }
-	}
-	ans, release := c.Client.SendCall(ctx, s)
-	return PersistHook_drop_Results_Future{Future: ans.Future()}, release
-}
-
-// A PersistHook_Server is a PersistHook with a local implementation.
-type PersistHook_Server interface {
-	Restore(context.Context, PersistHook_restore) error
-
-	Drop(context.Context, PersistHook_drop) error
-}
-
-// PersistHook_NewServer creates a new Server from an implementation of PersistHook_Server.
-func PersistHook_NewServer(s PersistHook_Server, policy *server.Policy) *server.Server {
-	c, _ := s.(server.Shutdowner)
-	return server.New(PersistHook_Methods(nil, s), s, c, policy)
-}
-
-// PersistHook_ServerToClient creates a new Client from an implementation of PersistHook_Server.
-// The caller is responsible for calling Release on the returned Client.
-func PersistHook_ServerToClient(s PersistHook_Server, policy *server.Policy) PersistHook {
-	return PersistHook{Client: capnp.NewClient(PersistHook_NewServer(s, policy))}
-}
-
-// PersistHook_Methods appends Methods to a slice that invoke the methods on s.
-// This can be used to create a more complicated Server.
-func PersistHook_Methods(methods []server.Method, s PersistHook_Server) []server.Method {
-	if cap(methods) == 0 {
-		methods = make([]server.Method, 0, 2)
-	}
-
-	methods = append(methods, server.Method{
-		Method: capnp.Method{
-			InterfaceID:   0x9e629b6a29a1a3ac,
-			MethodID:      0,
-			InterfaceName: "sandstorm-http-bridge.capnp:PersistHook",
-			MethodName:    "restore",
-		},
-		Impl: func(ctx context.Context, call *server.Call) error {
-			return s.Restore(ctx, PersistHook_restore{call})
-		},
-	})
-
-	methods = append(methods, server.Method{
-		Method: capnp.Method{
-			InterfaceID:   0x9e629b6a29a1a3ac,
-			MethodID:      1,
-			InterfaceName: "sandstorm-http-bridge.capnp:PersistHook",
-			MethodName:    "drop",
-		},
-		Impl: func(ctx context.Context, call *server.Call) error {
-			return s.Drop(ctx, PersistHook_drop{call})
-		},
-	})
-
-	return methods
-}
-
-// PersistHook_restore holds the state for a server call to PersistHook.restore.
-// See server.Call for documentation.
-type PersistHook_restore struct {
-	*server.Call
-}
-
-// Args returns the call's arguments.
-func (c PersistHook_restore) Args() PersistHook_restore_Params {
-	return PersistHook_restore_Params{Struct: c.Call.Args()}
-}
-
-// AllocResults allocates the results struct.
-func (c PersistHook_restore) AllocResults() (PersistHook_restore_Results, error) {
-	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_restore_Results{Struct: r}, err
-}
-
-// PersistHook_drop holds the state for a server call to PersistHook.drop.
-// See server.Call for documentation.
-type PersistHook_drop struct {
-	*server.Call
-}
-
-// Args returns the call's arguments.
-func (c PersistHook_drop) Args() PersistHook_drop_Params {
-	return PersistHook_drop_Params{Struct: c.Call.Args()}
-}
-
-// AllocResults allocates the results struct.
-func (c PersistHook_drop) AllocResults() (PersistHook_drop_Results, error) {
-	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return PersistHook_drop_Results{Struct: r}, err
-}
-
-type PersistHook_restore_Params struct{ capnp.Struct }
-
-// PersistHook_restore_Params_TypeID is the unique identifier for the type PersistHook_restore_Params.
-const PersistHook_restore_Params_TypeID = 0xacf1f7572beacb8a
-
-func NewPersistHook_restore_Params(s *capnp.Segment) (PersistHook_restore_Params, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_restore_Params{st}, err
-}
-
-func NewRootPersistHook_restore_Params(s *capnp.Segment) (PersistHook_restore_Params, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_restore_Params{st}, err
-}
-
-func ReadRootPersistHook_restore_Params(msg *capnp.Message) (PersistHook_restore_Params, error) {
-	root, err := msg.Root()
-	return PersistHook_restore_Params{root.Struct()}, err
-}
-
-func (s PersistHook_restore_Params) String() string {
-	str, _ := text.Marshal(0xacf1f7572beacb8a, s.Struct)
-	return str
-}
-
-func (s PersistHook_restore_Params) ObjectId() (capnp.Ptr, error) {
-	return s.Struct.Ptr(0)
-}
-
-func (s PersistHook_restore_Params) HasObjectId() bool {
-	return s.Struct.HasPtr(0)
-}
-
-func (s PersistHook_restore_Params) SetObjectId(v capnp.Ptr) error {
-	return s.Struct.SetPtr(0, v)
-}
-
-// PersistHook_restore_Params_List is a list of PersistHook_restore_Params.
-type PersistHook_restore_Params_List struct{ capnp.List }
-
-// NewPersistHook_restore_Params creates a new list of PersistHook_restore_Params.
-func NewPersistHook_restore_Params_List(s *capnp.Segment, sz int32) (PersistHook_restore_Params_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
-	return PersistHook_restore_Params_List{l}, err
-}
-
-func (s PersistHook_restore_Params_List) At(i int) PersistHook_restore_Params {
-	return PersistHook_restore_Params{s.List.Struct(i)}
-}
-
-func (s PersistHook_restore_Params_List) Set(i int, v PersistHook_restore_Params) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s PersistHook_restore_Params_List) String() string {
-	str, _ := text.MarshalList(0xacf1f7572beacb8a, s.List)
-	return str
-}
-
-// PersistHook_restore_Params_Future is a wrapper for a PersistHook_restore_Params promised by a client call.
-type PersistHook_restore_Params_Future struct{ *capnp.Future }
-
-func (p PersistHook_restore_Params_Future) Struct() (PersistHook_restore_Params, error) {
-	s, err := p.Future.Struct()
-	return PersistHook_restore_Params{s}, err
-}
-
-func (p PersistHook_restore_Params_Future) ObjectId() *capnp.Future {
-	return p.Future.Field(0, nil)
-}
-
-type PersistHook_restore_Results struct{ capnp.Struct }
-
-// PersistHook_restore_Results_TypeID is the unique identifier for the type PersistHook_restore_Results.
-const PersistHook_restore_Results_TypeID = 0xbf61832246b65865
-
-func NewPersistHook_restore_Results(s *capnp.Segment) (PersistHook_restore_Results, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_restore_Results{st}, err
-}
-
-func NewRootPersistHook_restore_Results(s *capnp.Segment) (PersistHook_restore_Results, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_restore_Results{st}, err
-}
-
-func ReadRootPersistHook_restore_Results(msg *capnp.Message) (PersistHook_restore_Results, error) {
-	root, err := msg.Root()
-	return PersistHook_restore_Results{root.Struct()}, err
-}
-
-func (s PersistHook_restore_Results) String() string {
-	str, _ := text.Marshal(0xbf61832246b65865, s.Struct)
-	return str
-}
-
-func (s PersistHook_restore_Results) Cap() (capnp.Ptr, error) {
-	return s.Struct.Ptr(0)
-}
-
-func (s PersistHook_restore_Results) HasCap() bool {
-	return s.Struct.HasPtr(0)
-}
-
-func (s PersistHook_restore_Results) SetCap(v capnp.Ptr) error {
-	return s.Struct.SetPtr(0, v)
-}
-
-// PersistHook_restore_Results_List is a list of PersistHook_restore_Results.
-type PersistHook_restore_Results_List struct{ capnp.List }
-
-// NewPersistHook_restore_Results creates a new list of PersistHook_restore_Results.
-func NewPersistHook_restore_Results_List(s *capnp.Segment, sz int32) (PersistHook_restore_Results_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
-	return PersistHook_restore_Results_List{l}, err
-}
-
-func (s PersistHook_restore_Results_List) At(i int) PersistHook_restore_Results {
-	return PersistHook_restore_Results{s.List.Struct(i)}
-}
-
-func (s PersistHook_restore_Results_List) Set(i int, v PersistHook_restore_Results) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s PersistHook_restore_Results_List) String() string {
-	str, _ := text.MarshalList(0xbf61832246b65865, s.List)
-	return str
-}
-
-// PersistHook_restore_Results_Future is a wrapper for a PersistHook_restore_Results promised by a client call.
-type PersistHook_restore_Results_Future struct{ *capnp.Future }
-
-func (p PersistHook_restore_Results_Future) Struct() (PersistHook_restore_Results, error) {
-	s, err := p.Future.Struct()
-	return PersistHook_restore_Results{s}, err
-}
-
-func (p PersistHook_restore_Results_Future) Cap() *capnp.Future {
-	return p.Future.Field(0, nil)
-}
-
-type PersistHook_drop_Params struct{ capnp.Struct }
-
-// PersistHook_drop_Params_TypeID is the unique identifier for the type PersistHook_drop_Params.
-const PersistHook_drop_Params_TypeID = 0xdb37eac12de5a5c6
-
-func NewPersistHook_drop_Params(s *capnp.Segment) (PersistHook_drop_Params, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_drop_Params{st}, err
-}
-
-func NewRootPersistHook_drop_Params(s *capnp.Segment) (PersistHook_drop_Params, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
-	return PersistHook_drop_Params{st}, err
-}
-
-func ReadRootPersistHook_drop_Params(msg *capnp.Message) (PersistHook_drop_Params, error) {
-	root, err := msg.Root()
-	return PersistHook_drop_Params{root.Struct()}, err
-}
-
-func (s PersistHook_drop_Params) String() string {
-	str, _ := text.Marshal(0xdb37eac12de5a5c6, s.Struct)
-	return str
-}
-
-func (s PersistHook_drop_Params) ObjectId() (capnp.Ptr, error) {
-	return s.Struct.Ptr(0)
-}
-
-func (s PersistHook_drop_Params) HasObjectId() bool {
-	return s.Struct.HasPtr(0)
-}
-
-func (s PersistHook_drop_Params) SetObjectId(v capnp.Ptr) error {
-	return s.Struct.SetPtr(0, v)
-}
-
-// PersistHook_drop_Params_List is a list of PersistHook_drop_Params.
-type PersistHook_drop_Params_List struct{ capnp.List }
-
-// NewPersistHook_drop_Params creates a new list of PersistHook_drop_Params.
-func NewPersistHook_drop_Params_List(s *capnp.Segment, sz int32) (PersistHook_drop_Params_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
-	return PersistHook_drop_Params_List{l}, err
-}
-
-func (s PersistHook_drop_Params_List) At(i int) PersistHook_drop_Params {
-	return PersistHook_drop_Params{s.List.Struct(i)}
-}
-
-func (s PersistHook_drop_Params_List) Set(i int, v PersistHook_drop_Params) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s PersistHook_drop_Params_List) String() string {
-	str, _ := text.MarshalList(0xdb37eac12de5a5c6, s.List)
-	return str
-}
-
-// PersistHook_drop_Params_Future is a wrapper for a PersistHook_drop_Params promised by a client call.
-type PersistHook_drop_Params_Future struct{ *capnp.Future }
-
-func (p PersistHook_drop_Params_Future) Struct() (PersistHook_drop_Params, error) {
-	s, err := p.Future.Struct()
-	return PersistHook_drop_Params{s}, err
-}
-
-func (p PersistHook_drop_Params_Future) ObjectId() *capnp.Future {
-	return p.Future.Field(0, nil)
-}
-
-type PersistHook_drop_Results struct{ capnp.Struct }
-
-// PersistHook_drop_Results_TypeID is the unique identifier for the type PersistHook_drop_Results.
-const PersistHook_drop_Results_TypeID = 0xceb81407857fe247
-
-func NewPersistHook_drop_Results(s *capnp.Segment) (PersistHook_drop_Results, error) {
-	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return PersistHook_drop_Results{st}, err
-}
-
-func NewRootPersistHook_drop_Results(s *capnp.Segment) (PersistHook_drop_Results, error) {
-	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0})
-	return PersistHook_drop_Results{st}, err
-}
-
-func ReadRootPersistHook_drop_Results(msg *capnp.Message) (PersistHook_drop_Results, error) {
-	root, err := msg.Root()
-	return PersistHook_drop_Results{root.Struct()}, err
-}
-
-func (s PersistHook_drop_Results) String() string {
-	str, _ := text.Marshal(0xceb81407857fe247, s.Struct)
-	return str
-}
-
-// PersistHook_drop_Results_List is a list of PersistHook_drop_Results.
-type PersistHook_drop_Results_List struct{ capnp.List }
-
-// NewPersistHook_drop_Results creates a new list of PersistHook_drop_Results.
-func NewPersistHook_drop_Results_List(s *capnp.Segment, sz int32) (PersistHook_drop_Results_List, error) {
-	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 0}, sz)
-	return PersistHook_drop_Results_List{l}, err
-}
-
-func (s PersistHook_drop_Results_List) At(i int) PersistHook_drop_Results {
-	return PersistHook_drop_Results{s.List.Struct(i)}
-}
-
-func (s PersistHook_drop_Results_List) Set(i int, v PersistHook_drop_Results) error {
-	return s.List.SetStruct(i, v.Struct)
-}
-
-func (s PersistHook_drop_Results_List) String() string {
-	str, _ := text.MarshalList(0xceb81407857fe247, s.List)
-	return str
-}
-
-// PersistHook_drop_Results_Future is a wrapper for a PersistHook_drop_Results promised by a client call.
-type PersistHook_drop_Results_Future struct{ *capnp.Future }
-
-func (p PersistHook_drop_Results_Future) Struct() (PersistHook_drop_Results, error) {
-	s, err := p.Future.Struct()
-	return PersistHook_drop_Results{s}, err
-}
-
-const schema_ac137d236832bb1e = "x\xda\xacV]h\x1cU\x14>\xe7\xcel'b\x96" +
-	"x\xb3qv#\xfe`L\xd5DS\x9a\x06TZp" +
-	"\xb7[\xb0\xdd\x8at7\xa5\xa8\x05\x09\x93\x9dK2\xdb" +
-	"\xee\xce\xb0s[l\xb1FR\xad4\x10\xac?\x05Q" +
-	"c\xd1\xda\x87J\xfa`\xa1\xa5TJL\xa1\x82\x14\xaa" +
-	"\x16\x15\x83\xfa\xa2\xf6\xc1*\x82\xf8 \x0d\xe8\xc8\x9d\xbf" +
-	"\x9dij\xb7Me_\x96s\xcf=\xdf\xf7\x9d\xfb\x9d" +
-	"\xc3,\xbfY\xc9\x91\xfe\xc4\xd0\x83\x00\x1be\x92X\xe2" +
-	"\xe8g\xf4\x03g\xf6}\xb5\x07\xe8r\x04\x90\x15\x80\x81" +
-	"[\xd5\x95\x04dgf\xcfso\xe0x\xf2u\xef$" +
-	"\x81\xe2(\xa9\xe6\x09`j\xa9\x9a\x05t\xa6\x0f\xbe\xd7" +
-	"Sy{\xf8]\xa0\xb7K\xce\x9d\x1f\xaf\x18\xbdgW" +
-	"j\x1a\x00\x07\x0aj\x1eSO\xab\x0a@j\x93\xfar" +
-	"\xea\x90\xf8\xe7L\x9c\xbd\xf8\xc0\x93\x7f\xfd1\x0d\xf4\xfe" +
-	"\xb0\xdc\xa4z\x12\x01SSn\xb9\x89\xb9S7%_" +
-	"\x199\xb2\xa0\xdc\xac:\x8e\xa9\xafE\x91\x81/\xd5\xb5" +
-	"\x98:\x96\x16\xf5\xf6\xdd]y\xe7\xde[\x8e\x7f\x14!" +
-	">\x95\xee\x15\xc4\xcf\xf5\x0f\xfdz`\xcd\x85\xa3\x91\x93" +
-	"\xfdiW\xd2\xa9\xc9\x9f\xbb\x06\xe67\x9c\x88J\x9aL" +
-	"\x0f\x0aI\x87\xd3\x82\x03{\xea\xf8c]\xbb\xb5\x99(" +
-	"\xc9\xcf\xd2\xa7\x05\xc997a\xba\xf0\xcd\xaa\xfb\xfe\xe1" +
-	"\xb3\xd1\x0a\x97\xd2nShF$\xcc\x1f,?2\xff" +
-	"\xc2\x07\xa7\xa3\x09\xfd\x99\xf5\"\xe1\x097\xc1\xf8\xe9\xe8" +
-	"[\xcfWN\xc6\x12\xaa^\xc2^7a\xed\x8fc/" +
-	")\x1d'\xcey\x1c\\\xfaG2\x1f\"\xc8\xce\x17J" +
-	"\xcf\xdf\xdf\xfe\xc6\xcfG\xafNe\xba\xc4\xd5c\xee\xd5" +
-	"O\x0f]\xe8\x9b\xbd\xf8\xf0wQ\xfas\x99\xf7\x05\xfd" +
-	"_\xdc\x84\xddC\xfb{.\xadz\xfc\xf7\xd8\x9bv\xae" +
-	"p\xdf\xb43\x0b\x8e\xff\xfb\xde\xb1\xb5\x9ans\xb3\xae" +
-	"T\xfbF9\xb7\xfa\x86\xeb\x86>\xc2\x96\x955\xabf" +
-	"\xad\xdc\xe8\x1fV\xd7qn\xe5\xbd\x93\x11\xc6\xc3\xf0j" +
-	"\xcb\xe8\xce\x16\xb5\xbaV\xb5\xc3B-\xd7Uh;\xd3" +
-	"\x0b:\xabq\x83\xef\xe8\xf6\x0aAI\x96d\x00\x19\x01" +
-	"hr3@\xa9U\xc2R\x86\xa0c\xf8y \x15t" +
-	"l\x05\x82\xad\x80!\xaa|%\xd4\"\xab\xdb\x86\xcd\xd7" +
-	"\x99\xe6\x16(\"\x96Z\xa4D\xc4\x9f\x18x\x80\xf6\xe7" +
-	"\x81\xd0\xa5\x0a6\xfa\x8a\xc1\xdb\xd0\xce^ 4\xa9\x8c" +
-	"\xd5\x99\x80a9l\xd3\xeb\xa6\x95\xc3\"6\xc0\x13M" +
-	"\xc0\x97\xf9\x97\x83^E\x15\xae\x8f(4\x87+\xac\xcc" +
-	"\x0b:\x00`;\x10l\x87&\x18Wh\xab+\xb4\xc3" +
-	"\x15\x1aL<\x06^\xa6\xaf\x8e\x03\xa1{\x85\xd0\xc0\xbd" +
-	"\x18L\x0a\xdd\xf5\x1a\x10\xbaCA\x12\xee\x03\x0c\x1cL" +
-	"\xab\x13@\xa8\xa1\xa0\x14:\x13\x83\xa9\xa4\xcfT\x80\xd0" +
-	"M\x0a\xca\xa1\xe70\x98KZ\xd8\x09\x84\xaeV\x9c\xc0" +
-	"3\xe8\x9b\x06r\xe8\xc6\x98m\x1bh\xd6\xd6\x985\xce" +
-	"\x9eE\xeeG\x85)0p\x05\x88\\[\xdb\xceD\x00" +
-	"\xdaDH\x04\x18w\xfb\x0bY\xaf\xc3\xf1\xf7\xb8f/" +
-	"\x07u]\xfb\x0d2\xbbm\xdbVn/\xa2\x8c\xcf\xc6" +
-	"\xe3\xd2=\x98ev\xac\xd0u\x8d\x84\xe8I\xd0\x12." +
-	"Hm\xdb\xca1f\x99<@\xa9E\xc2R\x07\xc1\xb1" +
-	"\xb2\x97\x87\xd4y\xe8\xcf\xf2\xe6;r\x8f\xce\x00 \xd2" +
-	"\x88q\x96\\\xab9=\xa8\xf8\xfcu5\xa0\x94\xb2f" +
-	"a\xbb,\x01\xc6|\xd9\xb2\xd8\xbd\xd1\x0cN\xb3\x0c\xa4" +
-	"\xceYb\xf5~\xbe\x81\x9d\xbf\\\xd5\x0d\xb4\xd4_3" +
-	"1\xe0\xdb\x1a\xc0\x92\xb1p\xbb,~\xa7\x05*\xe1\xbf" +
-	"f>\xdcj\x00H\x9d\xcc\x0f\xa5\xc3;\xdf|\xf1\x93" +
-	"\xcb\xe56\xdd0b)\xdd\x88\x83\xa3\x83P\xd4\xea\xca" +
-	"U\xb6\xd4\xff\xc9\xb8\x09\xd4\xd5\x16\xe2b\xa7\xb3x\xd7" +
-	"\x82\x1d\xdc\xdbx\xfd\xb6Q\xd3\xdc\x82\xb4\xf1\xc9\xe3\xc9" +
-	"\xfa7\x00\x00\xff\xff\xc0\x89\xe7*"
+const schema_ac137d236832bb1e = "x\xda\xa4\x93AH\x14Q\x18\xc7\xbf\xef\xcd\x8ec\xa0" +
+	"\xe8ccf\x88\x0a2+\x12\x0cK\x8a0\xca\xd5." +
+	"\xad\x10\xee\xe8)\xa1\xc3\xb43\xac#\xee:\xed<\xa5" +
+	"\"+\x96\xf0 DZ\x09\x15A\x87\xba\x08v\xb0C" +
+	"D!V\xe0!\"\x0a\x89\xa8\x83\x87\xa8K\xd0\xad\xdb" +
+	"B\xbdx\xb3;\xb3\xb3\xd5!7\xe6\xf6}\xff\xf9~" +
+	"\xef}\xff\xff\xeb\x98\xabK\x90\xbdr\xa6\x1d`\xb0\x99" +
+	"\xc8u\xdcZ\xb1\xee\xae\xcc\xbc\x9b\x02\xda\x81\x001\x05" +
+	"\xa0\xf3\x96\xdaE \xc6\x97\xa7\xce\xdf\xc0B\xe3\xf5R" +
+	"GF\xd1\x9aU{\x09`|^\xed\x06\xe4\xd3\x1f\x97" +
+	"64^\xcd<\x00\xbaY\xe2[\x9f\xee\x1b\xde>\x19" +
+	"_\x00\xc0\xce\xd7j\x01\xe3\x9fT\xf1\xc3\x9a\xaa`|" +
+	"NS\x00\xf8\xcc\xb6\x91;;\x9b\x1f-FH\x93Z" +
+	"\x9b -]\xf9\xd2\xd2Y\xec\x7f\x1c%\x8dk\x03\x82" +
+	"4\xab\x09\xd2B\xf2\xfd\xa1]?\xd9\xf3\xa8`Q\xf3" +
+	"\x8f\xf2\xd2\x17\x14\xef\xa5\x0f\x16/\xdd\x7f\x11\x15|\xd5" +
+	"\xfa\x84@\xd6\x85\xc0\xf9\xfc\xf0\xf6\x85\x91'U\x82\x1d" +
+	"\xba/\xe8\xf1\x05o\x95\xdd?>|c\xabQ\x81\xad" +
+	"\xb7\x08\xc1\xa4\xde\x0d<\xfc\xfa\xb8g\xe6,\x8f\x8d\xe5" +
+	"\x95l\xfb0cn\xfb\xa9\xbcce\xec=i\xd3\xcd" +
+	"\xb9]\x83\xe5f\xf6\x18cno\xa9\x93\xb1YX\xee" +
+	"q\x9d\xd6\xee\x94\x997\xb3^8\xa8~]\x83&l" +
+	"+i\xd99\xe6\xb0\xb3\xad\xa5A`\xc4\xa4\x18@\x0c" +
+	"\x01h\xe3\x10\x80\xd1 \xa1\xa1\x13\xe4NY\x07R\xd2" +
+	"\xc2\x06 \xd8\x00\x18R\xe5\x7f\xa4B\x0a\xd1h\x96d" +
+	"\x800,\x18\x18BO\x17\x80PG\xc1\x8a\x05\x18\xb8" +
+	"IO^\x03BO(H\xc2(a`\x03=>\x0d" +
+	"\x84&\x15\x94\xc2\xc5c\x90\x0fzx\x04\x08\xdd\xaf\xf0" +
+	"`mX\xde\x1b$\xd0\xaf\xd9\x9e\xe7\xe0X\xee\xe8X" +
+	"\x8e\xd9g\x90\x95\xabb/\x18,\x06\x84\xd63'l" +
+	"Q\x80&QJ`\x0aq\xfd\xde\x05C\xfcu\x0f\xd8" +
+	"^\xd3\xf8(\xab\xd19q\xee\xe0\xd8L\xcc\x1a\x1fe" +
+	"\xe8E\xbd\xeb\x050\xea%46\x12\xbc\x98.\xe9\x90" +
+	"\xf2\x03\xdf\xd3C[\x12G\x96\x01\x10i\xc4\xc0\xfaZ" +
+	"\xf3WBW\xc7\xa6\xa5\x82VL\xd7A\xca_\x11\xb7" +
+	"\xedM\xbf\xbd\xfa_\xd8\xea;\x97\xe3Z\x05\xdeT\x01" +
+	"K\xce\x9f)\xad\xfdm\x04\xb7\xac\xa2\xf5\xfd\xedu\x00" +
+	" \xe5\xfa\x9a1\x7f\xee\xe6\xe5g\xbf_\xb7\xb6\xa4\xa4" +
+	"\xcc\xbcbf\xbd\x9a\xd0\xbf\x02\x00\x00\xff\xff%Y\xc6" +
+	"\xe9"
 
 func init() {
 	schemas.Register(schema_ac137d236832bb1e,
 		0x86d490c59f64c564,
 		0x930d8201947c86bf,
-		0x9e629b6a29a1a3ac,
-		0xacf1f7572beacb8a,
 		0xad678f0d09bdd98a,
 		0xb1b610269c6a2190,
-		0xb2e5439feb5f31ce,
 		0xb84ffa3322e48dbd,
-		0xbf61832246b65865,
 		0xc174fe273bd649ac,
 		0xc2a480fa3863a3fa,
 		0xc2ba6a7e9ab2e369,
-		0xceb81407857fe247,
-		0xd274ecd8fd2907d0,
-		0xdb37eac12de5a5c6,
-		0xee4b3bf929955f83)
+		0xd274ecd8fd2907d0)
 }
